@@ -9,6 +9,11 @@
   --muted: #707985;
   --rule: #d9dee3;
   --surface: rgba(255, 255, 255, 0.62);
+  --heading: #24384f;
+  --subheading: #4f6f8d;
+  --body-text: #2d3b4a;
+  --link: #3f6384;
+  --accent: #9a604b;
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -24,6 +29,11 @@
     --muted: #919ba6;
     --rule: #2b3642;
     --surface: rgba(23, 32, 42, 0.74);
+    --heading: #edf3f8;
+    --subheading: #9bb9d2;
+    --body-text: #dbe3ea;
+    --link: #acc7de;
+    --accent: #dfa086;
   }
 }
 
@@ -46,7 +56,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background: transparent;
-  color: var(--ink);
+  color: var(--body-text);
   font-family: var(--font-body);
   text-rendering: optimizeLegibility;
 }
@@ -93,17 +103,19 @@ h1 {
   font-size: clamp(2.2rem, 7vw, 4.25rem);
   font-weight: 900;
   letter-spacing: -0.035em;
+  color: var(--heading);
 }
 
 h2 {
   margin: 2rem 0 0.65rem;
   font-size: 1.45rem;
-  color: var(--green);
+  color: var(--subheading);
 }
 
 h3 {
   margin: 1.55rem 0 0.35rem;
   font-size: 1.12rem;
+  color: var(--heading);
 }
 
 p,
@@ -113,7 +125,7 @@ ul {
 }
 
 a {
-  color: var(--green-deep);
+  color: var(--link);
   text-decoration: none;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.15em;
@@ -121,13 +133,13 @@ a {
 }
 
 a:hover {
-  color: var(--red);
+  color: var(--accent);
   text-decoration: underline;
 }
 
 a:focus-visible,
 #motion-toggle:focus-visible {
-  outline: 2px solid var(--red);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -163,7 +175,7 @@ hr {
   border: 0;
   height: 2px;
   margin: 2.6rem 0;
-  background: linear-gradient(to right, var(--red), var(--rule) 55%, transparent);
+  background: linear-gradient(to right, var(--accent), var(--rule) 55%, transparent);
 }
 
 section {
@@ -228,8 +240,8 @@ footer {
 
 #motion-toggle:hover {
   opacity: 1;
-  color: var(--red);
-  border-color: var(--green);
+  color: var(--accent);
+  border-color: var(--subheading);
 }
 
 .quilt-mark {
@@ -243,8 +255,8 @@ footer {
   transform: rotate(8deg);
   border: 1px solid var(--rule);
   background:
-    linear-gradient(45deg, transparent 48%, var(--green) 49% 51%, transparent 52%) 0 0 / 48px 48px,
-    linear-gradient(-45deg, transparent 48%, var(--red) 49% 51%, transparent 52%) 0 0 / 48px 48px,
+    linear-gradient(45deg, transparent 48%, var(--subheading) 49% 51%, transparent 52%) 0 0 / 48px 48px,
+    linear-gradient(-45deg, transparent 48%, var(--accent) 49% 51%, transparent 52%) 0 0 / 48px 48px,
     linear-gradient(var(--rule) 1px, transparent 1px) 0 0 / 24px 24px,
     linear-gradient(90deg, var(--rule) 1px, transparent 1px) 0 0 / 24px 24px;
   mask-image: linear-gradient(to bottom right, transparent 0%, #000 22%, #000 100%);
@@ -252,7 +264,7 @@ footer {
 }
 
 ::selection {
-  background: var(--green);
+  background: var(--subheading);
   color: #fff;
 }
 
