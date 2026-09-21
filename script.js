@@ -3,252 +3,266 @@
   if (year) year.textContent = new Date().getFullYear();
 
   const canvas = document.querySelector("#ambient-bg");
-  const toggle = document.querySelector("#motion-toggle");
-  if (!canvas || !toggle) return;
+  const motionButton = document.querySelector("#motion-toggle");
+  if (!canvas || !motionButton) return;
 
-  let gl;
+  // 1) Ask the browser for a WebGL drawing context.
+  // If WebGL is unavailable, the CSS paper background remains as the fallback.
+  let gl = null;
   try {
-    gl = canvas.getContext("webgl", {
-      alpha: false,
-      antialias: false,
-      powerPreference: "low-power"
-    });
+    gl =
+      canvas.getContext("webgl", {
+        alpha: false,
+        antialias: false,
+        powerPreference: "low-power"
+      }) || canvas.getContext("experimental-webgl");
   } catch (_) {}
 
   if (!gl) {
-    canvas.hidden = true;
+    canvas.style.display = "none";
     return;
   }
 
-  const vertexSource = `
-    attribute vec2 a_position;
+  // 2) A vertex shader draws one oversized triangle that covers the screen.
+  // The interesting work happens in the fragment shader below.
+  const vertexShaderSource = `
+    attribute vec2 position;
+
     void main() {
-      gl_Position = vec4(a_position, 0.0, 1.0);
+      gl_Position = vec4(position, 0.0, 1.0);
     }
   `;
 
-  const fragmentSource = `
+  // 3) The fragment shader calculates the color of every pixel.
+  //
+  // It follows the same overall technique as the reference:
+  // - generate smooth procedural noise
+  // - layer it into fractal Brownian motion (fbm)
+  // - use one noisy field to distort another (domain warping)
+  // - bend that field toward the pointer
+  // - mix a little green and red into the site's base paper color
+  const fragmentShaderSource = `
     precision highp float;
 
-    uniform vec2 u_resolution;
-    uniform vec2 u_pointer;
-    uniform vec2 u_pointer_velocity;
-    uniform float u_time;
-    uniform vec3 u_base;
-    uniform vec3 u_green;
-    uniform vec3 u_red;
+    uniform vec2 resolution;
+    uniform vec2 pointer;
+    uniform float elapsed;
+    uniform vec3 paper;
+    uniform vec3 olive;
+    uniform vec3 accentRed;
 
-    float hash(vec2 p) {
-      p = fract(p * vec2(123.34, 345.45));
-      p += dot(p, p + 34.345);
-      return fract(p.x * p.y);
+    float randomValue(vec2 cell) {
+      cell = fract(cell * vec2(117.17, 341.91));
+      cell += dot(cell, cell + 31.73);
+      return fract(cell.x * cell.y);
     }
 
-    float noise(vec2 p) {
-      vec2 i = floor(p);
-      vec2 f = fract(p);
-      vec2 u = f * f * (3.0 - 2.0 * f);
+    float smoothNoise(vec2 point) {
+      vec2 whole = floor(point);
+      vec2 fraction = fract(point);
 
-      float a = hash(i);
-      float b = hash(i + vec2(1.0, 0.0));
-      float c = hash(i + vec2(0.0, 1.0));
-      float d = hash(i + vec2(1.0, 1.0));
+      vec2 curve = fraction * fraction * (3.0 - 2.0 * fraction);
 
-      return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+      float lowerLeft  = randomValue(whole);
+      float lowerRight = randomValue(whole + vec2(1.0, 0.0));
+      float upperLeft  = randomValue(whole + vec2(0.0, 1.0));
+      float upperRight = randomValue(whole + vec2(1.0, 1.0));
+
+      float lower = mix(lowerLeft, lowerRight, curve.x);
+      float upper = mix(upperLeft, upperRight, curve.x);
+
+      return mix(lower, upper, curve.y);
     }
 
-    float fbm(vec2 p) {
-      float value = 0.0;
-      float amplitude = 0.5;
-      mat2 rotation = mat2(1.6, 1.2, -1.2, 1.6);
+    float layeredNoise(vec2 point) {
+      float total = 0.0;
+      float strength = 0.5;
 
-      for (int i = 0; i < 5; i++) {
-        value += amplitude * noise(p);
-        p = rotation * p;
-        amplitude *= 0.5;
+      // Rotating/scaling between octaves prevents obvious square repetition.
+      mat2 transform = mat2(1.55, 1.18, -1.18, 1.55);
+
+      for (int octave = 0; octave < 5; octave++) {
+        total += smoothNoise(point) * strength;
+        point = transform * point;
+        strength *= 0.5;
       }
 
-      return value;
+      return total;
     }
 
     void main() {
-      vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
-      vec2 pointer = (u_pointer - 0.5 * u_resolution) / u_resolution.y;
-      vec2 velocity = u_pointer_velocity / u_resolution.y;
+      // Aspect-correct coordinates centered around (0, 0).
+      vec2 uv = (gl_FragCoord.xy - 0.5 * resolution) / resolution.y;
 
-      float t = u_time * 0.038;
+      // Convert the mouse to those same centered coordinates.
+      vec2 mouse = (pointer - 0.5 * resolution) / resolution.y;
 
-      vec2 toPointer = pointer - uv;
-      float pointerDistance = length(toPointer);
-      vec2 pointerDirection = normalize(toPointer + vec2(0.0001));
+      // Slow motion is important: this should feel like drifting paper,
+      // not an animated screensaver.
+      float time = elapsed * 0.04;
 
-      /*
-        The cursor behaves like a soft current:
-        - nearby pixels are pulled toward it
-        - movement adds a directional wake
-        - the effect fades smoothly with distance
-      */
-      float attraction = exp(-pointerDistance * 2.5);
-      float wake = exp(-pointerDistance * 1.35);
+      vec2 samplePoint = uv * 1.2;
 
-      vec2 p = uv * 1.2;
-      p += pointerDirection * attraction * 0.24;
-      p -= velocity * wake * 1.8;
+      // 4) Mouse interaction.
+      // Nearby parts of the field are gently pulled toward the cursor.
+      vec2 towardMouse = mouse - uv;
+      float mouseDistance = length(towardMouse);
 
-      /*
-        Two layers of domain warping create the broad, cloudy paper-gradient
-        look. These are intentionally low-frequency so the result reads as a
-        gradient rather than obvious procedural noise.
-      */
-      vec2 q = vec2(
-        fbm(p + vec2(t, -t * 0.7)),
-        fbm(p + vec2(5.2, 1.3) + vec2(-t * 0.8, t * 0.55))
+      samplePoint +=
+        normalize(towardMouse + vec2(0.0001))
+        * 0.15
+        * exp(-mouseDistance * 2.5);
+
+      // 5) First warped field.
+      // Two different noise samples become a 2D distortion vector.
+      vec2 firstWarp = vec2(
+        layeredNoise(samplePoint + time),
+        layeredNoise(samplePoint + vec2(5.1, 1.4) - time)
       );
 
-      vec2 r = vec2(
-        fbm(p + 3.7 * q + vec2(1.7, 9.2) + vec2(t * 0.3, -t * 0.2)),
-        fbm(p + 3.7 * q + vec2(8.3, 2.8) + vec2(-t * 0.24, t * 0.28))
+      // 6) Second warped field.
+      // Feeding the first field back into another noise lookup creates the
+      // flowing, marbled shapes rather than ordinary cloudy noise.
+      vec2 secondWarp = vec2(
+        layeredNoise(
+          samplePoint
+          + 4.0 * firstWarp
+          + vec2(1.8, 9.1)
+          + 0.14 * time
+        ),
+        layeredNoise(
+          samplePoint
+          + 4.0 * firstWarp
+          + vec2(8.2, 2.9)
+          - 0.12 * time
+        )
       );
 
-      float field = fbm(p + 4.0 * r);
-      float secondary = fbm(p * 0.8 + 2.2 * q - 1.5 * r + vec2(2.4, -3.1));
+      float mainFlow = layeredNoise(samplePoint + 4.0 * secondWarp);
 
-      /*
-        Mouse position also changes the overall gradient balance:
-        moving horizontally shifts olive/red balance; moving vertically
-        changes where the stronger band sits.
-      */
-      vec2 pointer01 = u_pointer / u_resolution;
-      float horizontalBias = pointer01.x - 0.5;
-      float verticalBias = pointer01.y - 0.5;
+      // 7) Turn the noise into a restrained color wash.
+      // Most of every pixel remains the base paper color.
+      float oliveAmount =
+        smoothstep(0.30, 0.80, mainFlow) * 0.11;
 
-      float broadGreen = smoothstep(
-        0.28 - horizontalBias * 0.08,
-        0.82 - horizontalBias * 0.06,
-        field
-      );
+      float redAmount =
+        smoothstep(0.32, 0.78, secondWarp.x) * 0.065;
 
-      float broadRed = smoothstep(
-        0.36 + horizontalBias * 0.05,
-        0.82 + horizontalBias * 0.08,
-        secondary + verticalBias * 0.10
-      );
+      vec3 finalColor = paper;
+      finalColor = mix(finalColor, olive, oliveAmount);
+      finalColor = mix(finalColor, accentRed, redAmount);
 
-      /*
-        Local color bloom follows the mouse so the gradient itself visibly
-        shifts as the cursor moves, not just the distortion field.
-      */
-      float cursorBloom = exp(-pointerDistance * pointerDistance * 3.4);
-      float cursorGreen = cursorBloom * (0.55 + 0.45 * (1.0 - pointer01.x));
-      float cursorRed = cursorBloom * (0.30 + 0.70 * pointer01.x);
-
-      float greenMix = broadGreen * 0.115 + cursorGreen * 0.045;
-      float redMix = broadRed * 0.065 + cursorRed * 0.032;
-
-      vec3 color = u_base;
-      color = mix(color, u_green, clamp(greenMix, 0.0, 0.18));
-      color = mix(color, u_red, clamp(redMix, 0.0, 0.11));
-
-      /*
-        A gentle center-weighting keeps the page readable and gives the field
-        the soft paper-wash quality of the reference.
-      */
-      float vignette = smoothstep(1.15, 0.1, length(uv));
-      color = mix(u_base, color, 0.80 + 0.20 * vignette);
-
-      gl_FragColor = vec4(color, 1.0);
+      gl_FragColor = vec4(finalColor, 1.0);
     }
   `;
 
-  function compile(type, source) {
+  function compileShader(type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
 
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      throw new Error(gl.getShaderInfoLog(shader) || "Shader compile failed");
+      throw new Error(gl.getShaderInfoLog(shader) || "Shader compilation failed.");
     }
 
     return shader;
   }
 
-  let program;
+  let program = null;
+
   try {
     program = gl.createProgram();
-    gl.attachShader(program, compile(gl.VERTEX_SHADER, vertexSource));
-    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, fragmentSource));
+    gl.attachShader(
+      program,
+      compileShader(gl.VERTEX_SHADER, vertexShaderSource)
+    );
+    gl.attachShader(
+      program,
+      compileShader(gl.FRAGMENT_SHADER, fragmentShaderSource)
+    );
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      throw new Error(gl.getProgramInfoLog(program) || "Shader link failed");
+      throw new Error(gl.getProgramInfoLog(program) || "Shader linking failed.");
     }
+
+    gl.useProgram(program);
   } catch (_) {
-    canvas.hidden = true;
+    canvas.style.display = "none";
     return;
   }
 
-  gl.useProgram(program);
-
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+  // One oversized triangle covers the full viewport.
+  const triangleBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, triangleBuffer);
   gl.bufferData(
     gl.ARRAY_BUFFER,
     new Float32Array([-1, -1, 3, -1, -1, 3]),
     gl.STATIC_DRAW
   );
 
-  const position = gl.getAttribLocation(program, "a_position");
-  gl.enableVertexAttribArray(position);
-  gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+  const positionLocation = gl.getAttribLocation(program, "position");
+  gl.enableVertexAttribArray(positionLocation);
+  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
   const uniforms = {
-    resolution: gl.getUniformLocation(program, "u_resolution"),
-    pointer: gl.getUniformLocation(program, "u_pointer"),
-    pointerVelocity: gl.getUniformLocation(program, "u_pointer_velocity"),
-    time: gl.getUniformLocation(program, "u_time"),
-    base: gl.getUniformLocation(program, "u_base"),
-    green: gl.getUniformLocation(program, "u_green"),
-    red: gl.getUniformLocation(program, "u_red")
+    resolution: gl.getUniformLocation(program, "resolution"),
+    pointer: gl.getUniformLocation(program, "pointer"),
+    elapsed: gl.getUniformLocation(program, "elapsed"),
+    paper: gl.getUniformLocation(program, "paper"),
+    olive: gl.getUniformLocation(program, "olive"),
+    accentRed: gl.getUniformLocation(program, "accentRed")
   };
 
-  function cssColor(name, fallback) {
-    const value = getComputedStyle(document.documentElement)
-      .getPropertyValue(name)
-      .trim();
+  // Read the exact site palette from CSS so light/dark mode automatically
+  // changes the WebGL background too.
+  function hexToRgb01(hex, fallback) {
+    const cleaned = hex.trim().replace("#", "");
 
-    const hex = value.startsWith("#") ? value.slice(1) : "";
-    if (!/^[0-9a-f]{6}$/i.test(hex)) return fallback;
+    if (!/^[0-9a-f]{6}$/i.test(cleaned)) return fallback;
 
     return [
-      parseInt(hex.slice(0, 2), 16) / 255,
-      parseInt(hex.slice(2, 4), 16) / 255,
-      parseInt(hex.slice(4, 6), 16) / 255
+      parseInt(cleaned.slice(0, 2), 16) / 255,
+      parseInt(cleaned.slice(2, 4), 16) / 255,
+      parseInt(cleaned.slice(4, 6), 16) / 255
     ];
   }
 
   let palette = {};
 
-  function readPalette() {
+  function refreshPalette() {
+    const css = getComputedStyle(document.documentElement);
+
     palette = {
-      base: cssColor("--paper", [0.941, 0.945, 0.922]),
-      green: cssColor("--green", [0.365, 0.427, 0.231]),
-      red: cssColor("--red", [0.643, 0.227, 0.227])
+      paper: hexToRgb01(
+        css.getPropertyValue("--paper"),
+        [0.94, 0.945, 0.92]
+      ),
+      olive: hexToRgb01(
+        css.getPropertyValue("--green"),
+        [0.36, 0.43, 0.23]
+      ),
+      red: hexToRgb01(
+        css.getPropertyValue("--red"),
+        [0.64, 0.23, 0.23]
+      )
     };
   }
 
-  readPalette();
+  refreshPalette();
 
-  let dpr = 1;
-  let pointer = [0, 0];
-  let pointerTarget = [0, 0];
-  let previousPointer = [0, 0];
-  let pointerVelocity = [0, 0];
+  // Canvas sizing is capped at 1.5x device pixel ratio to avoid doing
+  // unnecessary GPU work on very high-density displays.
+  let pixelRatio = 1;
 
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const mouse = [0, 0];
+  const mouseTarget = [0, 0];
 
-    const width = Math.max(1, Math.floor(window.innerWidth * dpr));
-    const height = Math.max(1, Math.floor(window.innerHeight * dpr));
+  function resizeCanvas() {
+    pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+
+    const width = Math.floor(window.innerWidth * pixelRatio);
+    const height = Math.floor(window.innerHeight * pixelRatio);
 
     if (canvas.width !== width || canvas.height !== height) {
       canvas.width = width;
@@ -256,27 +270,28 @@
       gl.viewport(0, 0, width, height);
     }
 
-    if (pointerTarget[0] === 0 && pointerTarget[1] === 0) {
-      pointer = [width / 2, height / 2];
-      pointerTarget = [width / 2, height / 2];
-      previousPointer = [width / 2, height / 2];
+    if (mouseTarget[0] === 0 && mouseTarget[1] === 0) {
+      mouse[0] = width * 0.5;
+      mouse[1] = height * 0.5;
+      mouseTarget[0] = mouse[0];
+      mouseTarget[1] = mouse[1];
     }
   }
 
-  function trackPointer(clientX, clientY) {
-    pointerTarget = [
-      clientX * dpr,
-      (window.innerHeight - clientY) * dpr
-    ];
+  function setPointer(clientX, clientY) {
+    mouseTarget[0] = clientX * pixelRatio;
+
+    // WebGL's Y axis starts at the bottom, while browser pointer coordinates
+    // start at the top, so Y must be flipped.
+    mouseTarget[1] =
+      (window.innerHeight - clientY) * pixelRatio;
   }
 
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", resizeCanvas);
 
   window.addEventListener(
     "pointermove",
-    (event) => {
-      trackPointer(event.clientX, event.clientY);
-    },
+    (event) => setPointer(event.clientX, event.clientY),
     { passive: true }
   );
 
@@ -284,109 +299,153 @@
     "touchmove",
     (event) => {
       const touch = event.touches && event.touches[0];
-      if (touch) trackPointer(touch.clientX, touch.clientY);
+      if (touch) setPointer(touch.clientX, touch.clientY);
     },
     { passive: true }
   );
 
-  resize();
+  resizeCanvas();
 
-  let running = true;
-  let animationFrame = 0;
-  let simulatedTime = 0;
-  let previousTime = performance.now();
+  let simulationTime = 0;
+  let previousFrameTime = performance.now();
+  let animationFrameId = 0;
+  let isRunning = true;
 
-  function draw() {
-    gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
-    gl.uniform2f(uniforms.pointer, pointer[0], pointer[1]);
-    gl.uniform2f(uniforms.pointerVelocity, pointerVelocity[0], pointerVelocity[1]);
-    gl.uniform1f(uniforms.time, simulatedTime);
-    gl.uniform3fv(uniforms.base, palette.base);
-    gl.uniform3fv(uniforms.green, palette.green);
-    gl.uniform3fv(uniforms.red, palette.red);
+  function paintFrame() {
+    gl.uniform2f(
+      uniforms.resolution,
+      canvas.width,
+      canvas.height
+    );
+
+    gl.uniform2f(
+      uniforms.pointer,
+      mouse[0],
+      mouse[1]
+    );
+
+    gl.uniform1f(
+      uniforms.elapsed,
+      simulationTime
+    );
+
+    gl.uniform3fv(
+      uniforms.paper,
+      palette.paper
+    );
+
+    gl.uniform3fv(
+      uniforms.olive,
+      palette.olive
+    );
+
+    gl.uniform3fv(
+      uniforms.accentRed,
+      palette.red
+    );
+
     gl.drawArrays(gl.TRIANGLES, 0, 3);
   }
 
-  function frame(now) {
-    const delta = Math.min((now - previousTime) / 1000, 0.05);
-    previousTime = now;
+  function animate(now) {
+    const seconds =
+      Math.min((now - previousFrameTime) / 1000, 0.05);
 
-    simulatedTime += delta;
+    previousFrameTime = now;
+    simulationTime += seconds;
 
-    previousPointer[0] = pointer[0];
-    previousPointer[1] = pointer[1];
+    // Smooth mouse tracking prevents the field from snapping instantly.
+    mouse[0] += (mouseTarget[0] - mouse[0]) * 0.05;
+    mouse[1] += (mouseTarget[1] - mouse[1]) * 0.05;
 
-    pointer[0] += (pointerTarget[0] - pointer[0]) * 0.075;
-    pointer[1] += (pointerTarget[1] - pointer[1]) * 0.075;
+    paintFrame();
 
-    const rawVelocityX = pointer[0] - previousPointer[0];
-    const rawVelocityY = pointer[1] - previousPointer[1];
-
-    pointerVelocity[0] += (rawVelocityX - pointerVelocity[0]) * 0.18;
-    pointerVelocity[1] += (rawVelocityY - pointerVelocity[1]) * 0.18;
-
-    pointerVelocity[0] *= 0.92;
-    pointerVelocity[1] *= 0.92;
-
-    draw();
-
-    if (running && !document.hidden) {
-      animationFrame = requestAnimationFrame(frame);
+    if (isRunning && !document.hidden) {
+      animationFrameId = requestAnimationFrame(animate);
     } else {
-      animationFrame = 0;
+      animationFrameId = 0;
     }
   }
 
-  function start() {
-    if (!running || document.hidden || animationFrame) return;
-    previousTime = performance.now();
-    animationFrame = requestAnimationFrame(frame);
+  function beginAnimation() {
+    if (animationFrameId || !isRunning || document.hidden) return;
+
+    previousFrameTime = performance.now();
+    animationFrameId = requestAnimationFrame(animate);
   }
 
-  function setRunning(next) {
-    running = next;
-    toggle.setAttribute("aria-pressed", String(!next));
-    toggle.textContent = next ? "pause drift" : "resume drift";
-    toggle.title = next
-      ? "Pause background motion"
-      : "Resume background motion";
+  function setMotion(enabled) {
+    isRunning = enabled;
+
+    motionButton.setAttribute(
+      "aria-pressed",
+      enabled ? "false" : "true"
+    );
+
+    motionButton.textContent =
+      enabled ? "pause drift" : "resume drift";
+
+    motionButton.title =
+      enabled
+        ? "Pause the background motion"
+        : "Resume the background motion";
 
     try {
-      localStorage.setItem("background-motion", next ? "on" : "off");
+      localStorage.setItem(
+        "background-motion",
+        enabled ? "on" : "off"
+      );
     } catch (_) {}
 
-    if (next) start();
+    if (enabled) beginAnimation();
   }
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  motionButton.hidden = false;
+  motionButton.addEventListener(
+    "click",
+    () => setMotion(!isRunning)
+  );
 
-  let stored = null;
+  // Respect a saved choice first; otherwise respect reduced-motion.
+  let savedMotion = null;
+
   try {
-    stored = localStorage.getItem("background-motion");
+    savedMotion =
+      localStorage.getItem("background-motion");
   } catch (_) {}
 
-  const startRunning = stored
-    ? stored === "on"
-    : !reduceMotion.matches;
+  const reducedMotion =
+    window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  toggle.hidden = false;
-  toggle.addEventListener("click", () => setRunning(!running));
+  const shouldStart =
+    savedMotion !== null
+      ? savedMotion === "on"
+      : !reducedMotion.matches;
 
-  const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+  // Re-read the CSS colors when the operating system theme changes.
+  const darkMode =
+    window.matchMedia("(prefers-color-scheme: dark)");
 
-  const refreshPalette = () => {
-    readPalette();
-    draw();
-  };
-
-  if (colorScheme.addEventListener) {
-    colorScheme.addEventListener("change", refreshPalette);
+  function handleThemeChange() {
+    refreshPalette();
+    paintFrame();
   }
 
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) start();
-  });
+  if (darkMode.addEventListener) {
+    darkMode.addEventListener("change", handleThemeChange);
+  } else if (darkMode.addListener) {
+    darkMode.addListener(handleThemeChange);
+  }
 
-  setRunning(startRunning);
-  draw();
+  document.addEventListener(
+    "visibilitychange",
+    () => {
+      if (!document.hidden) beginAnimation();
+    }
+  );
+
+  setMotion(shouldStart);
+
+  // Always draw once, even when motion is disabled.
+  paintFrame();
 })();
