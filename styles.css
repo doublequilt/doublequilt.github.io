@@ -1,14 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  --green: #5d6d3b;
-  --green-deep: #3f4a2b;
-  --red: #a43a3a;
-  --paper: #f0f1eb;
-  --ink: #242621;
-  --muted: #767871;
-  --rule: #d8dad2;
-  --surface: rgba(255, 255, 255, 0.5);
+  --green: #5d7896;
+  --green-deep: #354f6b;
+  --red: #a66a55;
+  --paper: #f5f6f3;
+  --ink: #202832;
+  --muted: #707985;
+  --rule: #d9dee3;
+  --surface: rgba(255, 255, 255, 0.62);
   --font-display: "Fraunces", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -16,14 +16,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --green: #94a86d;
-    --green-deep: #b2c48e;
-    --red: #e66b6b;
-    --paper: #12140f;
-    --ink: #e2e3dd;
-    --muted: #7a7c75;
-    --rule: #2c2f27;
-    --surface: rgba(26, 29, 22, 0.7);
+    --green: #8aa8c2;
+    --green-deep: #b8cce0;
+    --red: #d79a82;
+    --paper: #111820;
+    --ink: #e8edf2;
+    --muted: #919ba6;
+    --rule: #2b3642;
+    --surface: rgba(23, 32, 42, 0.74);
   }
 }
 
