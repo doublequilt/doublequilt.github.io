@@ -1,146 +1,114 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Personal website for Your Name — projects, writing, and a little about me." />
-  <meta name="theme-color" content="#f4f0e8" />
-  <title>Your Name</title>
+  <meta name="description" content="Nick's personal website — projects, writing, and things worth sharing." />
+  <meta name="theme-color" content="#f0f1eb" />
+  <title>Nick</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="styles.css" />
-  <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <header class="site-header shell">
-    <a class="wordmark" href="#top" aria-label="Home">YN</a>
-    <nav class="nav" aria-label="Primary navigation">
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#writing">Writing</a>
-      <button class="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme">◐</button>
-    </nav>
-  </header>
-
-  <main id="main">
-    <section class="hero shell" id="top">
-      <p class="eyebrow">Hello there <span aria-hidden="true">↗</span></p>
-      <h1>I'm <span class="ink">Your Name.</span></h1>
-      <p class="lede">
-        I'm a student interested in the places where <strong>science</strong>, <strong>engineering</strong>,
-        <strong>health</strong>, and <strong>people</strong> meet. This is a small corner of the internet for
-        things I've made, written, and found worth sharing.
+  <main>
+    <header class="intro">
+      <h1>Hi <span aria-hidden="true">👋</span> I'm Nick</h1>
+      <p>
+        I'm a student interested in the overlap between science, engineering,
+        health, and people. This is my small corner of the web for projects,
+        notes, and things I think are worth sharing.
       </p>
+    </header>
 
-      <div class="directory" aria-label="Quick links">
-        <p>You may be interested in…</p>
-        <ul class="link-list">
-          <li><a href="#projects"><span>Selected projects</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="#writing"><span>Notes & writing</span><span aria-hidden="true">↘</span></a></li>
-          <li><a href="https://github.com/YOUR-USERNAME" target="_blank" rel="noreferrer"><span>GitHub</span><span aria-hidden="true">↗</span></a></li>
-          <li><a href="https://www.linkedin.com/in/YOUR-USERNAME/" target="_blank" rel="noreferrer"><span>LinkedIn</span><span aria-hidden="true">↗</span></a></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section shell" id="about">
-      <div class="section-label">01 / About</div>
-      <div class="section-body two-col">
-        <h2>Curious by default.</h2>
-        <div class="copy">
-          <p>
-            I'm drawn to questions that cross boundaries: how a device changes behavior, how data can improve
-            health, or how technical decisions affect the communities around them.
-          </p>
-          <p>
-            Outside class, I like building small tools, reading widely, volunteering, and working on projects
-            that turn abstract ideas into something useful.
-          </p>
-          <p class="small-note">Replace these paragraphs with a short bio in your own voice.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section shell" id="projects">
-      <div class="section-label">02 / Projects</div>
-      <div class="section-body">
-        <div class="section-heading-row">
-          <h2>Things I've worked on.</h2>
-          <p class="muted">A few examples — swap these for your real work.</p>
-        </div>
-
-        <div class="project-grid">
-          <article class="project-card">
-            <div>
-              <p class="project-kicker">Research / Modeling</p>
-              <h3>Glucose–insulin dynamics</h3>
-              <p>Exploring how mathematical models can describe biological systems and support better health decisions.</p>
-            </div>
-            <a href="#" aria-label="Read about glucose-insulin dynamics project">View project <span aria-hidden="true">↗</span></a>
-          </article>
-
-          <article class="project-card">
-            <div>
-              <p class="project-kicker">Engineering / Ethics</p>
-              <h3>Design, risk & responsibility</h3>
-              <p>Notes on engineering decisions, public safety, and how technical responsibility extends beyond the drawing board.</p>
-            </div>
-            <a href="#" aria-label="Read about engineering ethics project">View project <span aria-hidden="true">↗</span></a>
-          </article>
-
-          <article class="project-card">
-            <div>
-              <p class="project-kicker">Health / Community</p>
-              <h3>Community health</h3>
-              <p>Reflections on access, communication, prevention, and the everyday systems behind patient care.</p>
-            </div>
-            <a href="#" aria-label="Read about community health project">View project <span aria-hidden="true">↗</span></a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section shell" id="writing">
-      <div class="section-label">03 / Writing</div>
-      <div class="section-body two-col">
-        <h2>Notes, essays & miscellany.</h2>
-        <div>
-          <ul class="writing-list">
-            <li>
-              <a href="#">
-                <span><strong>Why small systems matter</strong><small>Essay · 6 min</small></span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span><strong>On designing for people, not abstractions</strong><small>Notes · 4 min</small></span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span><strong>Books, papers, and things worth returning to</strong><small>Collection</small></span>
-                <span aria-hidden="true">↗</span>
-              </a>
-            </li>
+    <section aria-labelledby="interested">
+      <h2 id="interested">You may be interested in...</h2>
+      <ul class="directory">
+        <li>
+          <a rel="me" href="https://github.com/doublequilt">My GitHub repositories</a>
+          <span class="aside">code & experiments</span>
+        </li>
+        <li>
+          <a href="#projects">Projects & experiments</a>
+          <span aria-hidden="true">🛠️</span>
+          <ul>
+            <li><a href="#glucose">Glucose–insulin modeling</a></li>
+            <li><a href="#ethics">Engineering, risk & responsibility</a></li>
+            <li><a href="#health">Community health</a></li>
           </ul>
-        </div>
-      </div>
+        </li>
+        <li><a href="#writing">Writing & notes</a> <span aria-hidden="true">✍️</span></li>
+        <li><a href="#about">A little more about me</a></li>
+        <li><a href="#site">About this site</a> <span aria-hidden="true">🧵</span></li>
+      </ul>
     </section>
 
-    <section class="contact shell" aria-labelledby="contact-title">
-      <p class="eyebrow">One more thing</p>
-      <h2 id="contact-title">Say hello.</h2>
-      <p>If you'd like to talk about a project, an idea, or something interesting you've read, feel free to reach out.</p>
-      <a class="button" href="mailto:you@example.com">you@example.com <span aria-hidden="true">↗</span></a>
+    <hr />
+
+    <section id="about">
+      <h2>About me</h2>
+      <p>
+        I'm drawn to questions that cross boundaries: how technology changes
+        behavior, how data can improve health, and how technical decisions affect
+        the communities around them.
+      </p>
+      <p>
+        I like building small tools, reading widely, volunteering, and turning
+        abstract ideas into things that are useful, understandable, or both.
+      </p>
+    </section>
+
+    <section id="projects">
+      <h2>Selected projects</h2>
+
+      <article id="glucose">
+        <h3>Glucose–insulin modeling</h3>
+        <p>
+          Exploring how mathematical models can describe biological systems,
+          including how glucose and insulin change over time.
+        </p>
+      </article>
+
+      <article id="ethics">
+        <h3>Engineering, risk & responsibility</h3>
+        <p>
+          Notes and case studies on engineering judgment, public safety, design
+          risk, and the responsibilities that come with technical work.
+        </p>
+      </article>
+
+      <article id="health">
+        <h3>Community health</h3>
+        <p>
+          Reflections on access, communication, prevention, and the everyday
+          systems that shape patient care.
+        </p>
+      </article>
+    </section>
+
+    <section id="writing">
+      <h2>Writing & notes</h2>
+      <ul class="post-list">
+        <li>
+          <span class="placeholder-title">Notes are coming soon.</span>
+          <span class="post-desc">This section is ready for essays, short notes, reading lists, or project write-ups.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="site">
+      <h2>About this site</h2>
+      <p>
+        Built with plain HTML, CSS, and a tiny bit of JavaScript. No framework,
+        no build step, and no dependency on a particular host, so it can live on
+        GitHub Pages now and move to a custom domain later.
+      </p>
     </section>
   </main>
 
-  <footer class="site-footer shell">
-    <p>© <span id="year"></span> Your Name</p>
-    <p>Built with plain HTML, CSS & a tiny bit of JavaScript.</p>
+  <div class="quilt-mark" aria-hidden="true"></div>
+
+  <footer>
+    <p>© <span id="year"></span> Nick · <a href="https://github.com/doublequilt">GitHub</a></p>
   </footer>
 
   <script src="script.js"></script>
