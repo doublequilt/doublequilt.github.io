@@ -1,24 +1,18 @@
-# Personal Website
+# doublequilt.github.io
 
-A lightweight personal site inspired by the simplicity and link-first feel of austegard.com, but with an original layout and styling.
+Personal website for GitHub Pages.
 
-## Customize it
+The design is intentionally lightweight and link-first: a narrow reading column, a friendly homepage directory, serif display typography, restrained color, automatic dark mode, and subtle texture. It takes broad visual inspiration from austegard.com while using original markup, CSS, content, and decoration.
 
-Open `index.html` and replace:
+## Stack
 
-- `Your Name` and `YN`
-- `YOUR-USERNAME` in the GitHub/LinkedIn links
-- `you@example.com`
-- the About text
-- the three project cards
-- the writing links
-- the page title and meta description in `<head>`
+- Plain HTML
+- Plain CSS
+- Tiny vanilla JavaScript helper for the footer year
+- No framework
+- No build step
 
-You can change the main colors at the top of `styles.css`.
-
-## Run locally
-
-You can double-click `index.html`, or from this folder run:
+## Local preview
 
 ```bash
 python3 -m http.server 8000
@@ -26,19 +20,20 @@ python3 -m http.server 8000
 
 Then open `http://localhost:8000`.
 
-## Publish on GitHub Pages
+## GitHub Pages
 
-This repository is already named `doublequilt.github.io`, so it is ready to be used as a GitHub Pages user site.
+This repository is named `doublequilt.github.io`, so it can serve as the account's GitHub Pages user site.
 
-In GitHub: **Settings → Pages → Build and deployment → Deploy from a branch → main → / (root)**.
+In GitHub:
 
-## Use your own domain
+**Settings → Pages → Build and deployment → Deploy from a branch → main → / (root)**
 
-GitHub Pages can host the site while your own domain points to it.
+## Custom domain
 
-1. In GitHub Pages settings, enter your custom domain.
-2. Copy `CNAME.example` to a new file named exactly `CNAME` and replace its contents with your domain.
-3. At your domain registrar/DNS provider, follow GitHub's current Pages DNS instructions.
-4. After DNS is working, enable **Enforce HTTPS**.
+The same static files can be used with a custom domain later.
 
-The same files also work on Netlify, Cloudflare Pages, Vercel, or a normal web server because there is no build step.
+1. Add the custom domain in GitHub Pages settings.
+2. Copy `CNAME.example` to a file named `CNAME`.
+3. Put only the domain name in `CNAME`.
+4. Configure DNS according to GitHub Pages' current instructions.
+5. Enable HTTPS once DNS resolves.
