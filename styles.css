@@ -244,124 +244,6 @@ footer {
   border-color: var(--subheading);
 }
 
-.quilt-mark {
-  --tile: 52px;
-  position: fixed;
-  right: -2.8rem;
-  bottom: -2.8rem;
-  width: min(44vw, 410px);
-  aspect-ratio: 1;
-  z-index: 1;
-  opacity: 0.2;
-  transform: rotate(7deg);
-  overflow: hidden;
-  border: 1px solid var(--rule);
-  pointer-events: none;
-
-  /* Primary tessellation lattice */
-  background:
-    linear-gradient(30deg,
-      transparent 0 46%,
-      color-mix(in srgb, var(--subheading) 50%, transparent) 46% 50%,
-      transparent 50% 100%
-    ) 0 0 / var(--tile) var(--tile),
-
-    linear-gradient(150deg,
-      transparent 0 46%,
-      color-mix(in srgb, var(--accent) 48%, transparent) 46% 50%,
-      transparent 50% 100%
-    ) 0 0 / var(--tile) var(--tile),
-
-    linear-gradient(90deg,
-      transparent 0 48%,
-      color-mix(in srgb, var(--rule) 85%, transparent) 48% 52%,
-      transparent 52% 100%
-    ) 0 0 / calc(var(--tile) / 2) calc(var(--tile) / 2),
-
-    linear-gradient(
-      color-mix(in srgb, var(--rule) 75%, transparent) 1px,
-      transparent 1px
-    ) 0 0 / calc(var(--tile) / 2) calc(var(--tile) / 2),
-
-    linear-gradient(90deg,
-      color-mix(in srgb, var(--rule) 75%, transparent) 1px,
-      transparent 1px
-    ) 0 0 / calc(var(--tile) / 2) calc(var(--tile) / 2);
-
-  mask-image:
-    linear-gradient(to bottom right, transparent 0%, #000 18%, #000 100%);
-  -webkit-mask-image:
-    linear-gradient(to bottom right, transparent 0%, #000 18%, #000 100%);
-}
-
-.quilt-mark::before,
-.quilt-mark::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-}
-
-/* Repeating rosettes / star polygons */
-.quilt-mark::before {
-  background:
-    conic-gradient(
-      from 22.5deg at 50% 50%,
-      transparent 0deg 15deg,
-      color-mix(in srgb, var(--subheading) 60%, transparent) 15deg 30deg,
-      transparent 30deg 60deg,
-      color-mix(in srgb, var(--accent) 52%, transparent) 60deg 75deg,
-      transparent 75deg 105deg,
-      color-mix(in srgb, var(--subheading) 60%, transparent) 105deg 120deg,
-      transparent 120deg 150deg,
-      color-mix(in srgb, var(--accent) 52%, transparent) 150deg 165deg,
-      transparent 165deg 195deg,
-      color-mix(in srgb, var(--subheading) 60%, transparent) 195deg 210deg,
-      transparent 210deg 240deg,
-      color-mix(in srgb, var(--accent) 52%, transparent) 240deg 255deg,
-      transparent 255deg 285deg,
-      color-mix(in srgb, var(--subheading) 60%, transparent) 285deg 300deg,
-      transparent 300deg 330deg,
-      color-mix(in srgb, var(--accent) 52%, transparent) 330deg 345deg,
-      transparent 345deg 360deg
-    ) 0 0 / var(--tile) var(--tile);
-
-  opacity: 0.78;
-}
-
-/* Circular arcs create the interlocking mathematical feel */
-.quilt-mark::after {
-  background:
-    radial-gradient(
-      circle at 0 0,
-      transparent 0 17px,
-      color-mix(in srgb, var(--subheading) 46%, transparent) 17px 19px,
-      transparent 19px
-    ) 0 0 / var(--tile) var(--tile),
-
-    radial-gradient(
-      circle at 100% 0,
-      transparent 0 17px,
-      color-mix(in srgb, var(--accent) 44%, transparent) 17px 19px,
-      transparent 19px
-    ) 0 0 / var(--tile) var(--tile),
-
-    radial-gradient(
-      circle at 0 100%,
-      transparent 0 17px,
-      color-mix(in srgb, var(--accent) 44%, transparent) 17px 19px,
-      transparent 19px
-    ) 0 0 / var(--tile) var(--tile),
-
-    radial-gradient(
-      circle at 100% 100%,
-      transparent 0 17px,
-      color-mix(in srgb, var(--subheading) 46%, transparent) 17px 19px,
-      transparent 19px
-    ) 0 0 / var(--tile) var(--tile);
-
-  opacity: 0.92;
-}
-
 ::selection {
   background: var(--subheading);
   color: #fff;
@@ -374,11 +256,6 @@ footer {
 
   .intro {
     margin-bottom: 2.4rem;
-  }
-
-  .quilt-mark {
-    width: 58vw;
-    opacity: 0.08;
   }
 }
 
