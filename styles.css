@@ -267,3 +267,20 @@ footer {
     transition: none !important;
   }
 }
+
+/* Hard-disable any legacy bottom-right quilt/grid decoration. */
+.quilt-mark,
+.quilt-mark::before,
+.quilt-mark::after,
+#grid,
+#grouch,
+[class*="quilt-decoration"],
+[id*="quilt-decoration"] {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+  background-image: none !important;
+  border: 0 !important;
+  mask: none !important;
+  -webkit-mask: none !important;
+}
