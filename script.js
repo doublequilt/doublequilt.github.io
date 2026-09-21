@@ -32,13 +32,16 @@
 
     uniform vec2 u_resolution;
     uniform vec2 u_pointer;
+    uniform vec2 u_pointer_velocity;
     uniform float u_time;
     uniform vec3 u_base;
     uniform vec3 u_green;
     uniform vec3 u_red;
 
     float hash(vec2 p) {
-      return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+      p = fract(p * vec2(123.34, 345.45));
+      p += dot(p, p + 34.345);
+      return fract(p.x * p.y);
     }
 
     float noise(vec2 p) {
@@ -56,12 +59,13 @@
 
     float fbm(vec2 p) {
       float value = 0.0;
-      float amplitude = 0.52;
+      float amplitude = 0.5;
+      mat2 rotation = mat2(1.6, 1.2, -1.2, 1.6);
 
       for (int i = 0; i < 5; i++) {
         value += amplitude * noise(p);
-        p = mat2(1.58, -1.18, 1.18, 1.58) * p + 0.17;
-        amplitude *= 0.48;
+        p = rotation * p;
+        amplitude *= 0.5;
       }
 
       return value;
@@ -70,29 +74,87 @@
     void main() {
       vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution) / u_resolution.y;
       vec2 pointer = (u_pointer - 0.5 * u_resolution) / u_resolution.y;
+      vec2 velocity = u_pointer_velocity / u_resolution.y;
 
-      float t = u_time * 0.022;
-      vec2 p = uv * 1.08;
+      float t = u_time * 0.038;
 
-      vec2 towardPointer = pointer - uv;
-      float pointerDistance = length(towardPointer);
-      p += towardPointer * 0.055 * exp(-pointerDistance * 2.1);
+      vec2 toPointer = pointer - uv;
+      float pointerDistance = length(toPointer);
+      vec2 pointerDirection = normalize(toPointer + vec2(0.0001));
 
-      float a = fbm(p + vec2(t, -t * 0.72));
-      float b = fbm(p + vec2(-1.8, 2.7) + vec2(-t * 0.55, t));
-      vec2 warp = vec2(a - 0.5, b - 0.5);
+      /*
+        The cursor behaves like a soft current:
+        - nearby pixels are pulled toward it
+        - movement adds a directional wake
+        - the effect fades smoothly with distance
+      */
+      float attraction = exp(-pointerDistance * 2.5);
+      float wake = exp(-pointerDistance * 1.35);
 
-      float field = fbm(p + warp * 2.75 + vec2(t * 0.35, -t * 0.2));
-      float ribbon = fbm(p * 0.72 - warp * 1.55 + vec2(4.1, -2.8));
+      vec2 p = uv * 1.2;
+      p += pointerDirection * attraction * 0.24;
+      p -= velocity * wake * 1.8;
 
-      float greenMix = smoothstep(0.28, 0.78, field) * 0.115;
-      float redMix = smoothstep(0.42, 0.84, ribbon) * 0.06;
+      /*
+        Two layers of domain warping create the broad, cloudy paper-gradient
+        look. These are intentionally low-frequency so the result reads as a
+        gradient rather than obvious procedural noise.
+      */
+      vec2 q = vec2(
+        fbm(p + vec2(t, -t * 0.7)),
+        fbm(p + vec2(5.2, 1.3) + vec2(-t * 0.8, t * 0.55))
+      );
 
-      vec3 color = mix(u_base, u_green, greenMix);
-      color = mix(color, u_red, redMix);
+      vec2 r = vec2(
+        fbm(p + 3.7 * q + vec2(1.7, 9.2) + vec2(t * 0.3, -t * 0.2)),
+        fbm(p + 3.7 * q + vec2(8.3, 2.8) + vec2(-t * 0.24, t * 0.28))
+      );
 
-      float vignette = smoothstep(1.25, 0.15, length(uv));
-      color = mix(u_base, color, 0.78 + vignette * 0.22);
+      float field = fbm(p + 4.0 * r);
+      float secondary = fbm(p * 0.8 + 2.2 * q - 1.5 * r + vec2(2.4, -3.1));
+
+      /*
+        Mouse position also changes the overall gradient balance:
+        moving horizontally shifts olive/red balance; moving vertically
+        changes where the stronger band sits.
+      */
+      vec2 pointer01 = u_pointer / u_resolution;
+      float horizontalBias = pointer01.x - 0.5;
+      float verticalBias = pointer01.y - 0.5;
+
+      float broadGreen = smoothstep(
+        0.28 - horizontalBias * 0.08,
+        0.82 - horizontalBias * 0.06,
+        field
+      );
+
+      float broadRed = smoothstep(
+        0.36 + horizontalBias * 0.05,
+        0.82 + horizontalBias * 0.08,
+        secondary + verticalBias * 0.10
+      );
+
+      /*
+        Local color bloom follows the mouse so the gradient itself visibly
+        shifts as the cursor moves, not just the distortion field.
+      */
+      float cursorBloom = exp(-pointerDistance * pointerDistance * 3.4);
+      float cursorGreen = cursorBloom * (0.55 + 0.45 * (1.0 - pointer01.x));
+      float cursorRed = cursorBloom * (0.30 + 0.70 * pointer01.x);
+
+      float greenMix = broadGreen * 0.115 + cursorGreen * 0.045;
+      float redMix = broadRed * 0.065 + cursorRed * 0.032;
+
+      vec3 color = u_base;
+      color = mix(color, u_green, clamp(greenMix, 0.0, 0.18));
+      color = mix(color, u_red, clamp(redMix, 0.0, 0.11));
+
+      /*
+        A gentle center-weighting keeps the page readable and gives the field
+        the soft paper-wash quality of the reference.
+      */
+      float vignette = smoothstep(1.15, 0.1, length(uv));
+      color = mix(u_base, color, 0.80 + 0.20 * vignette);
 
       gl_FragColor = vec4(color, 1.0);
     }
@@ -102,9 +164,11 @@
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
     gl.compileShader(shader);
+
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       throw new Error(gl.getShaderInfoLog(shader) || "Shader compile failed");
     }
+
     return shader;
   }
 
@@ -140,6 +204,7 @@
   const uniforms = {
     resolution: gl.getUniformLocation(program, "u_resolution"),
     pointer: gl.getUniformLocation(program, "u_pointer"),
+    pointerVelocity: gl.getUniformLocation(program, "u_pointer_velocity"),
     time: gl.getUniformLocation(program, "u_time"),
     base: gl.getUniformLocation(program, "u_base"),
     green: gl.getUniformLocation(program, "u_green"),
@@ -162,21 +227,26 @@
   }
 
   let palette = {};
+
   function readPalette() {
     palette = {
-      base: cssColor("--paper", [0.94, 0.945, 0.92]),
-      green: cssColor("--green", [0.35, 0.42, 0.23]),
-      red: cssColor("--red", [0.64, 0.26, 0.25])
+      base: cssColor("--paper", [0.941, 0.945, 0.922]),
+      green: cssColor("--green", [0.365, 0.427, 0.231]),
+      red: cssColor("--red", [0.643, 0.227, 0.227])
     };
   }
+
   readPalette();
 
   let dpr = 1;
   let pointer = [0, 0];
   let pointerTarget = [0, 0];
+  let previousPointer = [0, 0];
+  let pointerVelocity = [0, 0];
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+
     const width = Math.max(1, Math.floor(window.innerWidth * dpr));
     const height = Math.max(1, Math.floor(window.innerHeight * dpr));
 
@@ -189,6 +259,7 @@
     if (pointerTarget[0] === 0 && pointerTarget[1] === 0) {
       pointer = [width / 2, height / 2];
       pointerTarget = [width / 2, height / 2];
+      previousPointer = [width / 2, height / 2];
     }
   }
 
@@ -200,20 +271,35 @@
   }
 
   window.addEventListener("resize", resize);
-  window.addEventListener("pointermove", (event) => {
-    trackPointer(event.clientX, event.clientY);
-  }, { passive: true });
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      trackPointer(event.clientX, event.clientY);
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchmove",
+    (event) => {
+      const touch = event.touches && event.touches[0];
+      if (touch) trackPointer(touch.clientX, touch.clientY);
+    },
+    { passive: true }
+  );
 
   resize();
 
   let running = true;
   let animationFrame = 0;
   let simulatedTime = 0;
-  let previous = performance.now();
+  let previousTime = performance.now();
 
   function draw() {
     gl.uniform2f(uniforms.resolution, canvas.width, canvas.height);
     gl.uniform2f(uniforms.pointer, pointer[0], pointer[1]);
+    gl.uniform2f(uniforms.pointerVelocity, pointerVelocity[0], pointerVelocity[1]);
     gl.uniform1f(uniforms.time, simulatedTime);
     gl.uniform3fv(uniforms.base, palette.base);
     gl.uniform3fv(uniforms.green, palette.green);
@@ -222,12 +308,25 @@
   }
 
   function frame(now) {
-    const delta = Math.min((now - previous) / 1000, 0.05);
-    previous = now;
+    const delta = Math.min((now - previousTime) / 1000, 0.05);
+    previousTime = now;
 
     simulatedTime += delta;
-    pointer[0] += (pointerTarget[0] - pointer[0]) * 0.035;
-    pointer[1] += (pointerTarget[1] - pointer[1]) * 0.035;
+
+    previousPointer[0] = pointer[0];
+    previousPointer[1] = pointer[1];
+
+    pointer[0] += (pointerTarget[0] - pointer[0]) * 0.075;
+    pointer[1] += (pointerTarget[1] - pointer[1]) * 0.075;
+
+    const rawVelocityX = pointer[0] - previousPointer[0];
+    const rawVelocityY = pointer[1] - previousPointer[1];
+
+    pointerVelocity[0] += (rawVelocityX - pointerVelocity[0]) * 0.18;
+    pointerVelocity[1] += (rawVelocityY - pointerVelocity[1]) * 0.18;
+
+    pointerVelocity[0] *= 0.92;
+    pointerVelocity[1] *= 0.92;
 
     draw();
 
@@ -240,7 +339,7 @@
 
   function start() {
     if (!running || document.hidden || animationFrame) return;
-    previous = performance.now();
+    previousTime = performance.now();
     animationFrame = requestAnimationFrame(frame);
   }
 
@@ -248,7 +347,9 @@
     running = next;
     toggle.setAttribute("aria-pressed", String(!next));
     toggle.textContent = next ? "pause drift" : "resume drift";
-    toggle.title = next ? "Pause background motion" : "Resume background motion";
+    toggle.title = next
+      ? "Pause background motion"
+      : "Resume background motion";
 
     try {
       localStorage.setItem("background-motion", next ? "on" : "off");
@@ -258,6 +359,7 @@
   }
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
   let stored = null;
   try {
     stored = localStorage.getItem("background-motion");
@@ -271,6 +373,7 @@
   toggle.addEventListener("click", () => setRunning(!running));
 
   const colorScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
   const refreshPalette = () => {
     readPalette();
     draw();
