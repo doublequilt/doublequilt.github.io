@@ -101,7 +101,7 @@
       // not an animated screensaver.
       float time = elapsed * 0.04;
 
-      vec2 samplePoint = uv * 1.2;
+      vec2 samplePoint = uv * 1.05;
 
       // 4) Mouse interaction.
       // Nearby parts of the field are gently pulled toward the cursor.
@@ -110,8 +110,8 @@
 
       samplePoint +=
         normalize(towardMouse + vec2(0.0001))
-        * 0.15
-        * exp(-mouseDistance * 2.5);
+        * 0.21
+        * exp(-mouseDistance * 2.15);
 
       // 5) First warped field.
       // Two different noise samples become a 2D distortion vector.
@@ -126,27 +126,27 @@
       vec2 secondWarp = vec2(
         layeredNoise(
           samplePoint
-          + 4.0 * firstWarp
+          + 4.7 * firstWarp
           + vec2(1.8, 9.1)
           + 0.14 * time
         ),
         layeredNoise(
           samplePoint
-          + 4.0 * firstWarp
+          + 4.7 * firstWarp
           + vec2(8.2, 2.9)
           - 0.12 * time
         )
       );
 
-      float mainFlow = layeredNoise(samplePoint + 4.0 * secondWarp);
+      float mainFlow = layeredNoise(samplePoint + 4.8 * secondWarp);
 
       // 7) Turn the noise into a restrained color wash.
       // Most of every pixel remains the base paper color.
       float oliveAmount =
-        smoothstep(0.30, 0.80, mainFlow) * 0.11;
+        smoothstep(0.25, 0.76, mainFlow) * 0.19;
 
       float redAmount =
-        smoothstep(0.32, 0.78, secondWarp.x) * 0.065;
+        smoothstep(0.28, 0.74, secondWarp.x) * 0.12;
 
       vec3 finalColor = paper;
       finalColor = mix(finalColor, olive, oliveAmount);
@@ -240,11 +240,11 @@
       ),
       olive: hexToRgb01(
         css.getPropertyValue("--green"),
-        [0.36, 0.43, 0.23]
+        [0.365, 0.471, 0.588]
       ),
       red: hexToRgb01(
         css.getPropertyValue("--red"),
-        [0.64, 0.23, 0.23]
+        [0.651, 0.416, 0.333]
       )
     };
   }
