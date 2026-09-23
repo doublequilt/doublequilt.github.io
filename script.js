@@ -1,4 +1,44 @@
 (() => {
+  // Shared navigation
+  const menuButton = document.querySelector(".menu-toggle");
+  const primaryNav = document.querySelector("#primary-nav");
+
+  if (menuButton && primaryNav) {
+    menuButton.addEventListener("click", () => {
+      const open = menuButton.getAttribute("aria-expanded") === "true";
+      menuButton.setAttribute("aria-expanded", String(!open));
+      primaryNav.classList.toggle("is-open", !open);
+    });
+
+    primaryNav.addEventListener("click", (event) => {
+      if (event.target.closest("a")) {
+        menuButton.setAttribute("aria-expanded", "false");
+        primaryNav.classList.remove("is-open");
+      }
+    });
+  }
+
+  const currentFile = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".primary-nav a").forEach((link) => {
+    const target = link.getAttribute("href");
+    if (target === currentFile) link.setAttribute("aria-current", "page");
+  });
+
+  // Show setup notes only while the PDFs have not yet been uploaded.
+  async function checkPdf(fileName, noteId) {
+    const note = document.querySelector(noteId);
+    if (!note) return;
+    try {
+      const response = await fetch(fileName, { method: "HEAD", cache: "no-store" });
+      note.hidden = response.ok;
+    } catch (_) {
+      note.hidden = false;
+    }
+  }
+
+  checkPdf("resume.pdf", "#resume-missing");
+  checkPdf("artifact.pdf", "#artifact-missing");
+
   const year = document.querySelector("#year");
   if (year) year.textContent = new Date().getFullYear();
 
@@ -239,11 +279,11 @@
         [0.94, 0.945, 0.92]
       ),
       olive: hexToRgb01(
-        css.getPropertyValue("--green"),
+        css.getPropertyValue("--flow-primary"),
         [0.365, 0.471, 0.588]
       ),
       red: hexToRgb01(
-        css.getPropertyValue("--red"),
+        css.getPropertyValue("--flow-accent"),
         [0.651, 0.416, 0.333]
       )
     };
