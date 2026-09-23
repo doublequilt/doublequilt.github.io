@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Nick's resume." />
+  <meta name="theme-color" content="#f5f6f3" />
+  <title>Resume — Nick</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=20260923-day4" />
+</head>
+<body>
+  <canvas id="ambient-bg" aria-hidden="true"></canvas>
+  
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="index.html" aria-label="Nick ePortfolio home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">Nick <small>ePortfolio</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
+        <a href="about.html">About</a>
+        <a href="resume.html">Resume</a>
+        <a href="personal-statement.html">Statement</a>
+        <a href="artifact.html">Artifact</a>
+        <a href="reflection.html">Reflection</a>
+      </nav>
+    </div>
+  </header>
+  <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <p class="eyebrow">02 · Resume</p>
+      <h1>Resume</h1>
+      <p class="page-deck">
+        Education, experience, service, skills, and activities in one downloadable document.
+      </p>
+    </section>
+
+    <section class="document-panel">
+      <div class="document-toolbar">
+        <div>
+          <p class="document-label">PDF document</p>
+          <h2>Nick — Resume</h2>
+        </div>
+        <div class="document-actions">
+          <a class="button button-primary" href="resume.pdf" target="_blank" rel="noreferrer">Open PDF</a>
+          <a class="button button-quiet" href="resume.pdf" download>Download</a>
+        </div>
+      </div>
+
+      <div class="setup-note" id="resume-missing" hidden>
+        <strong>Resume PDF not uploaded yet.</strong>
+        <span>Upload your final PDF to the repository root with the filename <code>resume.pdf</code>.</span>
+      </div>
+
+      <object class="pdf-frame" data="resume.pdf#view=FitH" type="application/pdf" aria-label="Resume PDF">
+        <p>
+          Your browser could not display the embedded PDF.
+          <a href="resume.pdf">Open the resume directly.</a>
+        </p>
+      </object>
+
+      <div class="next-link">
+        <span>Next</span>
+        <a href="personal-statement.html">Personal Statement <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>© <span id="year"></span> Nick</p>
+    <a href="https://github.com/doublequilt">GitHub</a>
+  </footer>
+  <script src="script.js?v=20260923-day4"></script>
+</body>
+</html>
