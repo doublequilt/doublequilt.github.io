@@ -284,3 +284,89 @@ footer {
   mask: none !important;
   -webkit-mask: none !important;
 }
+
+
+/* Left-side link back to the current main site. */
+.archive-nav {
+  position: fixed;
+  left: 16px;
+  top: 50%;
+  z-index: 35;
+  transform: translateY(-50%);
+}
+
+.archive-home-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--paper) 86%, transparent);
+  color: var(--heading);
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(31, 46, 61, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.archive-home-link:hover {
+  transform: translateX(3px);
+  border-color: var(--subheading);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  color: var(--heading);
+  text-decoration: none;
+}
+
+.archive-home-icon {
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.archive-home-text {
+  display: grid;
+  line-height: 1.08;
+}
+
+.archive-home-text strong {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.archive-home-text small {
+  margin-top: 0.18rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 920px) {
+  .archive-nav {
+    left: 10px;
+    top: auto;
+    bottom: 52px;
+    transform: none;
+  }
+
+  .archive-home-text small {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .archive-nav {
+    left: 10px;
+    bottom: 48px;
+  }
+
+  .archive-home-link {
+    padding: 0.58rem 0.7rem;
+    border-radius: 12px;
+  }
+}
