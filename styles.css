@@ -254,7 +254,7 @@ main,
 }
 
 .hero {
-  padding: clamp(5rem, 10vw, 8rem) 0 clamp(4rem, 8vw, 6.5rem);
+  padding: clamp(2.8rem, 6vw, 4.5rem) 0 clamp(4rem, 8vw, 6.5rem);
 }
 
 .eyebrow,
@@ -437,7 +437,7 @@ h3 {
 }
 
 .page-header {
-  padding: clamp(4.5rem, 8vw, 7rem) 0 2rem;
+  padding: clamp(2.4rem, 5vw, 3.8rem) 0 2rem;
 }
 
 .page-header h1 {
@@ -700,11 +700,11 @@ button:focus-visible {
   }
 
   .hero {
-    padding-top: 4rem;
+    padding-top: 2.4rem;
   }
 
   .page-header {
-    padding-top: 4rem;
+    padding-top: 2.1rem;
   }
 
   .prose-card,
