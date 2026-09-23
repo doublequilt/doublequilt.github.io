@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A selected portfolio artifact and contextual statement." />
+  <meta name="theme-color" content="#f5f6f3" />
+  <title>Artifact — Nick</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=20260923-day4" />
+</head>
+<body>
+  <canvas id="ambient-bg" aria-hidden="true"></canvas>
+  
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="index.html" aria-label="Nick ePortfolio home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">Nick <small>ePortfolio</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
+        <a href="about.html">About</a>
+        <a href="resume.html">Resume</a>
+        <a href="personal-statement.html">Statement</a>
+        <a href="artifact.html">Artifact</a>
+        <a href="reflection.html">Reflection</a>
+      </nav>
+    </div>
+  </header>
+  <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <p class="eyebrow">04 · Artifact + Context</p>
+      <h1>Glucose–insulin dynamics</h1>
+      <p class="page-deck">
+        A quantitative project exploring how a mathematical model can represent a biological system.
+      </p>
+    </section>
+
+    <section class="artifact-layout">
+      <article class="prose-card">
+        <p class="section-kicker">Contextual statement</p>
+        <h2>Why I selected this work</h2>
+        <p>
+          I chose this project because it represents the kind of interdisciplinary problem
+          that interests me most. It required me to connect mathematics with biology,
+          interpret what a model can and cannot explain, and communicate technical reasoning
+          clearly. More importantly, it helped me see quantitative modeling not as an
+          abstract exercise, but as a way to ask better questions about real biological
+          processes. The project reflects my interest in combining analytical problem-solving
+          with health-related questions and shows my willingness to work through uncertainty
+          rather than treating a model as a perfect representation of reality.
+        </p>
+      </article>
+
+      <aside class="artifact-card">
+        <p class="document-label">Selected artifact</p>
+        <h2>Project document</h2>
+        <p>
+          You can host the full artifact here as a PDF. Once uploaded, the buttons below
+          will open or download it directly.
+        </p>
+        <div class="document-actions">
+          <a class="button button-primary" href="artifact.pdf" target="_blank" rel="noreferrer">Open PDF</a>
+          <a class="button button-quiet" href="artifact.pdf" download>Download</a>
+        </div>
+        <div class="setup-note" id="artifact-missing" hidden>
+          <strong>Artifact PDF not uploaded yet.</strong>
+          <span>Upload the file as <code>artifact.pdf</code> in the repository root.</span>
+        </div>
+      </aside>
+    </section>
+
+    <div class="next-link standalone-next">
+      <span>Next</span>
+      <a href="reflection.html">Reflection <span aria-hidden="true">→</span></a>
+    </div>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>© <span id="year"></span> Nick</p>
+    <a href="https://github.com/doublequilt">GitHub</a>
+  </footer>
+  <script src="script.js?v=20260923-day4"></script>
+</body>
+</html>
