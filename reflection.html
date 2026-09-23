@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A short reflection tying together Nick's Day 4 ePortfolio." />
+  <meta name="theme-color" content="#f5f6f3" />
+  <title>Reflection — Nick</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=20260923-day4" />
+</head>
+<body>
+  <canvas id="ambient-bg" aria-hidden="true"></canvas>
+  
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="index.html" aria-label="Nick ePortfolio home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">Nick <small>ePortfolio</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
+        <a href="about.html">About</a>
+        <a href="resume.html">Resume</a>
+        <a href="personal-statement.html">Statement</a>
+        <a href="artifact.html">Artifact</a>
+        <a href="reflection.html">Reflection</a>
+      </nav>
+    </div>
+  </header>
+  <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <p class="eyebrow">05 · Reflection</p>
+      <h1>What these pieces show together.</h1>
+      <p class="page-deck">
+        A short reflection on the experiences, skills, and values represented in this portfolio.
+      </p>
+    </section>
+
+    <article class="prose-card statement">
+      <p>
+        Looking across this portfolio, I see a consistent interest in connecting careful
+        analysis with practical human concerns. My resume records experiences and
+        responsibilities, while my personal statement explains the larger idea behind them:
+        I am most engaged when technical knowledge has a clear relationship to people.
+        The glucose–insulin modeling artifact reflects that pattern. It required quantitative
+        reasoning, but it also reminded me that models are useful because of the questions
+        they help us ask about real systems.
+      </p>
+
+      <p>
+        These experiences have also shaped the skills I value. I want to be able to analyze
+        difficult problems, but I also want to communicate clearly, recognize uncertainty,
+        and understand the consequences of a decision beyond the technical work itself.
+        Service and academic projects have both pushed me toward that balance. Together,
+        the pieces in this portfolio represent where I am now: still developing, but with
+        a clearer sense that my future work should combine scientific thinking,
+        responsibility, and attention to the people affected by the systems we build.
+      </p>
+
+      <div class="next-link">
+        <span>Return</span>
+        <a href="index.html">Portfolio Home <span aria-hidden="true">→</span></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>© <span id="year"></span> Nick</p>
+    <a href="https://github.com/doublequilt">GitHub</a>
+  </footer>
+  <script src="script.js?v=20260923-day4"></script>
+</body>
+</html>
