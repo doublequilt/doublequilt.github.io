@@ -3,12 +3,65 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="2;url=./" />
-  <title>Page not found</title>
-  <style>body{font:16px/1.6 ui-monospace,monospace;max-width:640px;margin:12vh auto;padding:0 1rem;background:#f4f0e8;color:#171713}a{color:inherit}</style>
+  <meta name="description" content="Page not found — Nick's ePortfolio." />
+  <meta name="theme-color" content="#f5f6f3" />
+  <title>404 — Page Not Found</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=20260923-day4" />
 </head>
 <body>
-  <h1>404</h1>
-  <p>That page doesn't exist. <a href="./">Return home</a>.</p>
+  <canvas id="ambient-bg" aria-hidden="true"></canvas>
+
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="index.html" aria-label="Nick ePortfolio home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">Nick <small>ePortfolio</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
+        <a href="about.html">About</a>
+        <a href="resume.html">Resume</a>
+        <a href="personal-statement.html">Statement</a>
+        <a href="artifact.html">Artifact</a>
+        <a href="reflection.html">Reflection</a>
+        <a href="old-main_page.html">Archive</a>
+      </nav>
+    </div>
+  </header>
+
+  <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
+
+  <main class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">404 · Page not found</p>
+      <h1>This page wandered off.</h1>
+      <p class="hero-lede">
+        The address may be outdated, mistyped, or linked to something that has moved.
+        The rest of the portfolio is still right where it should be.
+      </p>
+
+      <div class="hero-actions">
+        <a class="button button-primary" href="index.html">
+          Return home <span aria-hidden="true">→</span>
+        </a>
+        <a class="button button-quiet" href="old-main_page.html">
+          Visit archive
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>© <span id="year"></span> Nick</p>
+    <a href="https://github.com/doublequilt">GitHub</a>
+  </footer>
+
+  <script src="script.js?v=20260923-day4"></script>
 </body>
 </html>
