@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="About Nick and a guide to this ePortfolio." />
+  <meta name="theme-color" content="#f5f6f3" />
+  <title>About Me — Nick</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=20260923-day4" />
+</head>
+<body>
+  <canvas id="ambient-bg" aria-hidden="true"></canvas>
+  
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="index.html" aria-label="Nick ePortfolio home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">Nick <small>ePortfolio</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
+        <a href="about.html">About</a>
+        <a href="resume.html">Resume</a>
+        <a href="personal-statement.html">Statement</a>
+        <a href="artifact.html">Artifact</a>
+        <a href="reflection.html">Reflection</a>
+      </nav>
+    </div>
+  </header>
+  <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <p class="eyebrow">01 · About Me</p>
+      <h1>Hi, I’m Nick.</h1>
+      <p class="page-deck">
+        I’m interested in the point where scientific and technical problem-solving
+        meets real human experience.
+      </p>
+    </section>
+
+    <article class="prose-card">
+      <p>
+        I am a student drawn to science, engineering, health, and the questions that
+        connect them. I enjoy understanding how systems work—whether that means
+        modeling a biological process, thinking through the risks behind an engineering
+        decision, or asking how a technical solution changes when real people have to
+        use it. I am especially interested in work that combines careful analysis with
+        an awareness of the people and communities affected by that work.
+      </p>
+
+      <p>
+        My experiences outside the classroom have reinforced that perspective.
+        Volunteering in community health settings has shown me how much communication,
+        access, and trust matter alongside technical knowledge. Service has also taught
+        me to value reliability, patience, and the ability to explain complicated ideas
+        clearly. Those lessons shape the way I approach academic projects as well as the
+        kind of work I hope to pursue in the future.
+      </p>
+
+      <hr />
+
+      <h2>How to use this portfolio</h2>
+      <p>
+        This Day 4 ePortfolio brings together five pieces: this introduction, my resume,
+        a personal statement, one selected artifact with a contextual statement, and a
+        short reflection. Together, they provide a concise picture of my experience,
+        interests, skills, and the direction in which I hope to continue developing.
+      </p>
+
+      <div class="next-link">
+        <span>Next</span>
+        <a href="resume.html">Resume <span aria-hidden="true">→</span></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>© <span id="year"></span> Nick</p>
+    <a href="https://github.com/doublequilt">GitHub</a>
+  </footer>
+  <script src="script.js?v=20260923-day4"></script>
+</body>
+</html>
