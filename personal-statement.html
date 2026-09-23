@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Nick's personal statement." />
+  <meta name="theme-color" content="#f5f6f3" />
+  <title>Personal Statement — Nick</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=20260923-day4" />
+</head>
+<body>
+  <canvas id="ambient-bg" aria-hidden="true"></canvas>
+  
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="index.html" aria-label="Nick ePortfolio home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">Nick <small>ePortfolio</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
+        <a href="about.html">About</a>
+        <a href="resume.html">Resume</a>
+        <a href="personal-statement.html">Statement</a>
+        <a href="artifact.html">Artifact</a>
+        <a href="reflection.html">Reflection</a>
+      </nav>
+    </div>
+  </header>
+  <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
+
+  <main class="page-shell">
+    <section class="page-header">
+      <p class="eyebrow">03 · Personal Statement</p>
+      <h1>Connecting technical work to human impact.</h1>
+      <p class="page-deck">A personal statement about the experiences and ideas shaping my goals.</p>
+    </section>
+
+    <article class="prose-card statement">
+      <p>
+        Science became most meaningful to me when it stopped feeling separate from the
+        people it was supposed to serve. In class, I am interested in systems: biological
+        pathways, mathematical models, and the technical decisions that make a design
+        succeed or fail. Outside the classroom, my experiences in community health have
+        shown me that even an elegant solution is limited if people cannot understand,
+        access, or trust it. That connection between technical precision and human
+        experience has become one of the clearest themes in the way I think about my future.
+      </p>
+
+      <p>
+        I am especially drawn to problems that require more than one way of thinking.
+        Modeling glucose and insulin dynamics, for example, asks for mathematics and
+        biology, but it also raises a larger question: how can quantitative tools help us
+        understand health in ways that are actually useful? Studying engineering ethics
+        creates a similar tension. A design can meet technical requirements while still
+        demanding careful judgment about risk, responsibility, and the people who may be
+        affected by it. I value work that requires both analysis and perspective.
+      </p>
+
+      <p>
+        Service has strengthened that interest. Working around community health care has
+        made communication feel less like a secondary skill and more like part of the
+        solution itself. Listening carefully, explaining information clearly, and noticing
+        the barriers another person may be facing can change the usefulness of knowledge.
+        These experiences have encouraged me to become someone who can move comfortably
+        between technical detail and the broader context around it.
+      </p>
+
+      <p>
+        As I continue my education, I want to develop the scientific and analytical skills
+        needed to solve difficult problems without losing sight of why those problems
+        matter. My goal is not simply to understand complex systems. I want to use that
+        understanding responsibly, communicate it clearly, and contribute to work that
+        improves the way people experience health, technology, and the systems built around them.
+      </p>
+
+      <div class="next-link">
+        <span>Next</span>
+        <a href="artifact.html">Artifact + Context <span aria-hidden="true">→</span></a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <p>© <span id="year"></span> Nick</p>
+    <a href="https://github.com/doublequilt">GitHub</a>
+  </footer>
+  <script src="script.js?v=20260923-day4"></script>
+</body>
+</html>
