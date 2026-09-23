@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Nick's personal website — projects, writing, and things worth sharing." />
+  <meta name="theme-color" content="#f0f1eb" />
+  <title>Nick — Archived Homepage</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="old-main_styles.css" />
+</head>
+<body>
+  <canvas id="ambient-bg" aria-hidden="true"></canvas>
+  <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
+
+  <main>
+    <header class="intro">
+      <h1>Hi <span aria-hidden="true">👋</span> I'm Nick</h1>
+      <p>
+        I'm a student interested in the overlap between science, engineering,
+        health, and people. This is my small corner of the web for projects,
+        notes, and things I think are worth sharing.
+      </p>
+    </header>
+
+    <section aria-labelledby="interested">
+      <h2 id="interested">You may be interested in...</h2>
+      <ul class="directory">
+        <li>
+          <a rel="me" href="https://github.com/doublequilt">My GitHub repositories</a>
+          <span class="aside">code & experiments</span>
+        </li>
+        <li>
+          <a href="#projects">Projects & experiments</a>
+          <span aria-hidden="true">🛠️</span>
+          <ul>
+            <li><a href="#glucose">Glucose–insulin modeling</a></li>
+            <li><a href="#ethics">Engineering, risk & responsibility</a></li>
+            <li><a href="#health">Community health</a></li>
+          </ul>
+        </li>
+        <li><a href="#writing">Writing & notes</a> <span aria-hidden="true">✍️</span></li>
+        <li><a href="#about">A little more about me</a></li>
+        <li><a href="#site">About this site</a> <span aria-hidden="true">🧵</span></li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <section id="about">
+      <h2>About me</h2>
+      <p>
+        I'm drawn to questions that cross boundaries: how technology changes
+        behavior, how data can improve health, and how technical decisions affect
+        the communities around them.
+      </p>
+      <p>
+        I like building small tools, reading widely, volunteering, and turning
+        abstract ideas into things that are useful, understandable, or both.
+      </p>
+    </section>
+
+    <section id="projects">
+      <h2>Selected projects</h2>
+
+      <article id="glucose">
+        <h3>Glucose–insulin modeling</h3>
+        <p>
+          Exploring how mathematical models can describe biological systems,
+          including how glucose and insulin change over time.
+        </p>
+      </article>
+
+      <article id="ethics">
+        <h3>Engineering, risk & responsibility</h3>
+        <p>
+          Notes and case studies on engineering judgment, public safety, design
+          risk, and the responsibilities that come with technical work.
+        </p>
+      </article>
+
+      <article id="health">
+        <h3>Community health</h3>
+        <p>
+          Reflections on access, communication, prevention, and the everyday
+          systems that shape patient care.
+        </p>
+      </article>
+    </section>
+
+    <section id="writing">
+      <h2>Writing & notes</h2>
+      <ul class="post-list">
+        <li>
+          <span class="placeholder-title">Notes are coming soon.</span>
+          <span class="post-desc">This section is ready for essays, short notes, reading lists, or project write-ups.</span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="site">
+      <h2>About this site</h2>
+      <p>
+        Built with plain HTML, CSS, and a tiny bit of JavaScript. No framework,
+        no build step, and no dependency on a particular host, so it can live on
+        GitHub Pages now and move to a custom domain later.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Nick · <a href="https://github.com/doublequilt">GitHub</a></p>
+  </footer>
+
+  <script src="old-main_script.js"></script>
+</body>
+</html>
