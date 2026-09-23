@@ -744,3 +744,138 @@ button:focus-visible {
   background: none !important;
   background-image: none !important;
 }
+
+
+/* Resume page */
+.resume-sheet {
+  padding: clamp(1.35rem, 4vw, 2.4rem);
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  box-shadow: var(--shadow);
+}
+
+.resume-header {
+  padding-bottom: 1.4rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.resume-header h2 {
+  margin-bottom: 0;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+}
+
+.resume-contact {
+  display: grid;
+  justify-items: end;
+  gap: 0.2rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  text-align: right;
+}
+
+.resume-contact a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.resume-contact a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.resume-section {
+  padding: 1.5rem 0 0.35rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.resume-section:last-of-type {
+  border-bottom: 0;
+}
+
+.resume-section > h3 {
+  margin-bottom: 1rem;
+  color: var(--subheading);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.resume-entry + .resume-entry {
+  margin-top: 1.35rem;
+}
+
+.resume-entry-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.resume-entry-head strong {
+  color: var(--heading);
+  font-size: 0.98rem;
+}
+
+.resume-entry-head span {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.resume-entry > p {
+  margin: 0.2rem 0 0;
+}
+
+.resume-role {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-style: italic;
+}
+
+.resume-list,
+.resume-plain-list {
+  margin: 0.55rem 0 0;
+  padding-left: 1.15rem;
+}
+
+.resume-list li,
+.resume-plain-list li {
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+}
+
+.resume-skills {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.resume-skills p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .resume-header,
+  .resume-entry-head {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .resume-contact {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .resume-entry-head span {
+    text-align: left;
+  }
+}
