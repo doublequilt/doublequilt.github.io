@@ -2,7 +2,7 @@
 
 Personal website for GitHub Pages.
 
-The design is intentionally lightweight and link-first: a narrow reading column, a friendly homepage directory, serif display typography, restrained color, automatic dark mode, and subtle texture. It takes broad visual inspiration from austegard.com while using original markup, CSS, content, and decoration.
+Website is designed to be lightweight and relatively link-first, with a serif display typography.
 
 ## Stack
 
@@ -22,7 +22,7 @@ Then open `http://localhost:8000`.
 
 ## GitHub Pages
 
-This repository is named `doublequilt.github.io`, so it can serve as the account's GitHub Pages user site.
+This repository is named `doublequilt.github.io` and is this account's GitHub Pages user site.
 
 In GitHub:
 
