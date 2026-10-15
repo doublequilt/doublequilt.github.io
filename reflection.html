@@ -4,19 +4,20 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="A short reflection tying together Nick's Day 4 ePortfolio." />
-  <meta name="theme-color" content="#f5f6f3" />
+  <meta name="theme-color" content="#f5f7fc" />
   <title>Reflection — Nick</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="styles.css?v=20260923-day4" />
+  <link rel="stylesheet" href="styles.css?v=20261015" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <canvas id="ambient-bg" aria-hidden="true"></canvas>
   
   <header class="topbar">
     <div class="nav-shell">
-      <a class="brand" href="/" aria-label="Nick ePortfolio home">
+      <a class="brand" href="/" aria-label="Nicholas Chong — home">
         <span class="brand-mark" aria-hidden="true">N</span>
-        <span class="brand-text">Nick <small>ePortfolio</small></span>
+        <span class="brand-text">nicholas chong <small>Personal portfolio</small></span>
       </a>
 
       <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
@@ -25,18 +26,19 @@
       </button>
 
       <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
-        <a href="about.html">About</a>
-        <a href="resume.html">Resume</a>
-        <a href="personal-statement.html">Statement</a>
-        <a href="artifact.html">Artifact</a>
-        <a href="reflection.html">Reflection</a>
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/resume.html">Resume</a>
+        <a href="/personal-statement.html">Statement</a>
+        <a href="/artifact.html">Artifact</a>
+        <a href="/reflection.html">Reflection</a>
         <a href="old-main_page.html">Archive</a>
       </nav>
     </div>
   </header>
   <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
 
-  <main class="page-shell">
+  <main class="page-shell" id="main-content" tabindex="-1">
     <section class="page-header">
       <p class="eyebrow">05 · Reflection</p>
       <h1>What these pieces show together.</h1>
@@ -68,15 +70,15 @@
 
       <div class="next-link">
         <span>Return</span>
-        <a href="index.html">Portfolio Home <span aria-hidden="true">→</span></a>
+        <a href="/">Portfolio Home <span aria-hidden="true">→</span></a>
       </div>
     </article>
   </main>
 
   <footer class="site-footer page-shell">
-    <p>© <span id="year"></span> Nick</p>
+    <p>© 2026 nicholas chong</p>
     <a href="https://github.com/doublequilt">GitHub</a>
   </footer>
-  <script src="script.js?v=20260923-day4"></script>
+  <script src="script.js?v=20261015"></script>
 </body>
 </html>

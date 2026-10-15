@@ -10,6 +10,14 @@
       primaryNav.classList.toggle("is-open", !open);
     });
 
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && menuButton.getAttribute("aria-expanded") === "true") {
+        menuButton.setAttribute("aria-expanded", "false");
+        primaryNav.classList.remove("is-open");
+        menuButton.focus();
+      }
+    });
+
     primaryNav.addEventListener("click", (event) => {
       if (event.target.closest("a")) {
         menuButton.setAttribute("aria-expanded", "false");
@@ -20,7 +28,7 @@
 
   const currentFile = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".primary-nav a").forEach((link) => {
-    const target = link.getAttribute("href");
+    const target = new URL(link.href).pathname.split("/").pop() || "index.html";
     if (target === currentFile) link.setAttribute("aria-current", "page");
   });
 
@@ -39,8 +47,6 @@
   checkPdf("resume.pdf", "#resume-missing");
   checkPdf("artifact.pdf", "#artifact-missing");
 
-  const year = document.querySelector("#year");
-  if (year) year.textContent = new Date().getFullYear();
 
   const canvas = document.querySelector("#ambient-bg");
   const motionButton = document.querySelector("#motion-toggle");
