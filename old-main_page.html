@@ -4,26 +4,43 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Nick's personal website — projects, writing, and things worth sharing." />
-  <meta name="theme-color" content="#f0f1eb" />
+  <meta name="theme-color" content="#f5f7fc" />
   <title>Nick — Archived Homepage</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="old-main_styles.css?v=20260923-sidebar2" />
+  <link rel="stylesheet" href="styles.css?v=20261015" />
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <canvas id="ambient-bg" aria-hidden="true"></canvas>
 
-  <aside class="archive-sidebar" aria-label="Archived page navigation">
-    <a class="archive-sidebar-link" href="https://doublequilt.github.io/">
-      <span class="archive-sidebar-arrow" aria-hidden="true">←</span>
-      <span class="archive-sidebar-copy">
-        <strong>Back to main site</strong>
-        <small>doublequilt.github.io</small>
-      </span>
-    </a>
-  </aside>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" href="/" aria-label="Nicholas Chong — home">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">nicholas chong <small>Personal portfolio</small></span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-controls="primary-nav" aria-expanded="false">
+        <span>Menu</span>
+        <span class="menu-icon" aria-hidden="true"></span>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Portfolio navigation">
+        <a href="/">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/resume.html">Resume</a>
+        <a href="/personal-statement.html">Statement</a>
+        <a href="/artifact.html">Artifact</a>
+        <a href="/reflection.html">Reflection</a>
+        <a href="old-main_page.html">Archive</a>
+      </nav>
+    </div>
+  </header>
   <button id="motion-toggle" type="button" hidden aria-pressed="false">pause drift</button>
 
-  <main>
+  <main class="page-shell" id="main-content" tabindex="-1">
+    <section class="page-header"><p class="eyebrow">Archive · Original homepage</p><h1>A small corner of the web.</h1></section>
+    <article class="prose-card archive-content">
     <header class="intro">
       <h1>Hi <span aria-hidden="true">👋</span> I'm Nick</h1>
       <p>
@@ -67,6 +84,7 @@
 
     <section id="projects">
       <h2>Selected projects</h2>
+    </section>
 
     <section id="writing">
       <h2>Writing & notes</h2>
@@ -86,12 +104,13 @@
         GitHub Pages, or move to a custom domain later.
       </p>
     </section>
+    </article>
   </main>
 
-  <footer>
-    <p>© <span id="year"></span> nicholas chong · <a href="https://github.com/doublequilt">GitHub</a></p>
+  <footer class="site-footer page-shell">
+    <p>© 2026 nicholas chong · <a href="https://github.com/doublequilt">GitHub</a></p>
   </footer>
 
-  <script src="old-main_script.js"></script>
+  <script src="script.js?v=20261015"></script>
 </body>
 </html>
